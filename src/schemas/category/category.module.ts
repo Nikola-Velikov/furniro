@@ -10,5 +10,6 @@ import { Module } from '@nestjs/common';
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [CategoryService]
 })
 export class CategoryModule {}

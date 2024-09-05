@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export const ProductSchema = new Schema({
   name: {
@@ -54,8 +54,8 @@ export const ProductSchema = new Schema({
     default: [],
   },
   category: {
-    type: Schema.Types.ObjectId,
-    ref: 'Category',
+    type: Types.ObjectId,
+    ref: 'Category', // Make sure this matches the name of your Category model
     required: true,
   },
 }, { timestamps: true }); // Automatically adds createdAt and updatedAt fields

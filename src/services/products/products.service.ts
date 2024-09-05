@@ -13,8 +13,12 @@ export class ProductsService {
     return createdProduct.save();
   }
 
-  findAll(): Promise<Product[]> {
-    return this.productModel.find().exec();
+  async findAll(sort: any): Promise<Product[]> {
+    return this.productModel
+      .find()
+      .sort(sort)  // Apply sorting if any
+      .populate('category')
+      .exec();
   }
 
   findOne(id: string): Promise<Product | null> {
@@ -28,4 +32,35 @@ export class ProductsService {
   remove(id: string): Promise<Product | null> {
     return this.productModel.findByIdAndDelete(id).exec();
   }
+
+  async findByCategory(categoryId: string, sort: any): Promise<Product[]> {
+    return this.productModel
+      .find({ category: categoryId })
+      .sort(sort)  // Apply sorting if any
+      .populate('category')
+      .exec();
+  }
+
+  // Pagination without category filter
+  async findPaginated(options: any): Promise<Product[]> {
+    return this.productModel
+      .find()
+      .sort(options.sort)
+      .skip((options.page - 1) * options.limit)
+      .limit(options.limit)
+      .populate('category')
+      .exec();
+  }
+
+  // Pagination with category filter
+  async findPaginatedByCategory(categoryId: string, options: any): Promise<Product[]> {
+    return this.productModel
+      .find({ category: categoryId })
+      .sort(options.sort)  // Apply sorting
+      .skip((options.page - 1) * options.limit)
+      .limit(options.limit)
+      .populate('category')
+      .exec();
+  }
+
 }
