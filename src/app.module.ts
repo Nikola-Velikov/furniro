@@ -6,9 +6,10 @@ import { DatabaseModule } from './database/database.module';
 import { CategoryModule } from './schemas/category/category.module';
 import { ReviewModule } from './schemas/reviews/reviews.module';
 import { FeedbacksModule } from './schemas/feedbacks/feedbacks.module';
+import { MailListModule } from './schemas/mail-list/mail-list.module';
 
 @Module({
-  imports: [DatabaseModule, ProductsModule, CategoryModule, ReviewModule, FeedbacksModule],
+  imports: [DatabaseModule, ProductsModule, CategoryModule, ReviewModule, FeedbacksModule, MailListModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,12 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductDTO } from 'src/dto/product';
 import { Product } from 'src/interfaces/product.interface';
+import { ReviewService } from '../reviews/reviews.service';
+import { Review } from 'src/interfaces/review.interface';
 
 @Injectable()
 export class ProductsService {
-  constructor(@InjectModel('Product') private readonly productModel: Model<Product>) {}
+  constructor(
+    @InjectModel('Product') private readonly productModel: Model<Product>,
+    private readonly reviewService: ReviewService,  // Inject ReviewService
+  ) {}
 
   create(product: ProductDTO): Promise<Product> {
     const createdProduct = new this.productModel(product);
@@ -21,9 +26,37 @@ export class ProductsService {
       .exec();
   }
 
-  findOne(id: string): Promise<Product | null> {
-    return this.productModel.findById(id).exec();
+  async findOne(id: string): Promise<any | null> {
+    // Fetch the product and populate category
+    const product = await this.productModel.findById(id).populate('category').exec();
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+  
+    // Fetch reviews for the product
+    const reviews = await this.reviewService.findReviewsByProduct(id);
+    let avgRating = 0;
+  
+    if (reviews.length > 0) {
+      const reviewsCount = reviews.length;
+      avgRating = reviews.reduce((sum, review) => sum + review.value, 0) / reviewsCount;
+    }
+  
+   let relatedProducts = []
+  
+    if (product.category) {
+       relatedProducts = await this.productModel
+        .find({ category: product.category._id, _id: { $ne: id } })  
+        .limit(4)  // Limit to 4 products
+        .populate('category')
+        .exec();
+  
+    } 
+  
+    return {product, reviews, avgRating, relatedProducts};
   }
+  
+  
 
   update(id: string, product: ProductDTO): Promise<Product | null> {
     return this.productModel.findByIdAndUpdate(id, product, { new: true }).exec();
@@ -40,6 +73,7 @@ export class ProductsService {
       .populate('category')
       .exec();
   }
+
   async deleteByCategory(categoryId: string): Promise<void> {
     await this.productModel.deleteMany({ category: categoryId }).exec();
   }
@@ -65,5 +99,4 @@ export class ProductsService {
       .populate('category')
       .exec();
   }
-
 }

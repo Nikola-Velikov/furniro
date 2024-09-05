@@ -1,6 +1,5 @@
 import { IsString, IsNumber, IsOptional, IsBoolean, IsArray, Min, Max, Length, IsDecimal, ValidateNested, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CategoryDto } from './category';
 
 export class ProductDTO {
   @ApiProperty({
