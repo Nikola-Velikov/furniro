@@ -37,20 +37,17 @@ export class ProductsController {
         throw new BadRequestException('Invalid category ID!');
       }
   
-      // Check if category exists in the database
       const categoryExists = await this.categoryService.findOne(category);
       if (!categoryExists) {
         throw new NotFoundException('Category not found!');
       }
     }
   
-    // Handle sorting if provided
     if (sortBy) {
       const direction = sortDirection === 'desc' ? -1 : 1;
-      options.sort[sortBy] = direction;  // Sort by field and direction
+      options.sort[sortBy] = direction;  
     }
   
-    // If page or productNumber is provided, apply pagination
     if (page && productNumber) {
       options.page = Math.max(page, 1);  // Ensure page is at least 1
       options.limit = Math.max(productNumber, 1);  // Ensure at least 1 product

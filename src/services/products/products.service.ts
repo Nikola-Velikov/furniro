@@ -33,12 +33,15 @@ export class ProductsService {
     return this.productModel.findByIdAndDelete(id).exec();
   }
 
-  async findByCategory(categoryId: string, sort: any): Promise<Product[]> {
+  async findByCategory(categoryId: string, sort?: any): Promise<Product[]> {
     return this.productModel
       .find({ category: categoryId })
       .sort(sort)  // Apply sorting if any
       .populate('category')
       .exec();
+  }
+  async deleteByCategory(categoryId: string): Promise<void> {
+    await this.productModel.deleteMany({ category: categoryId }).exec();
   }
 
   // Pagination without category filter

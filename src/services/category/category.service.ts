@@ -34,11 +34,10 @@ export class CategoryService {
     return updatedCategory;
   }
 
-  async delete(id: string): Promise<Category> {
-    const deletedCategory = await this.categoryModel.findByIdAndDelete(id).exec();
-    if (!deletedCategory) {
-      throw new NotFoundException(`Category with id ${id} not found`);
+  async delete(id: string): Promise<void> {
+    const result = await this.categoryModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException('Category not found');
     }
-    return deletedCategory;
   }
 }
