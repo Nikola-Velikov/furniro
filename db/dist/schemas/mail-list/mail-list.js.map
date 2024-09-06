@@ -1,0 +1,1 @@
+{"version":3,"file":"mail-list.js","sourceRoot":"","sources":["../../../src/schemas/mail-list/mail-list.ts"],"names":[],"mappings":";;;AAAA,uCAAkC;AAErB,QAAA,cAAc,GAAG,IAAI,iBAAM,CACtC;IACE,KAAK,EAAE;QACL,IAAI,EAAE,MAAM;QACZ,QAAQ,EAAE,IAAI;QACd,SAAS,EAAE,CAAC;QACZ,SAAS,EAAE,GAAG;QACd,KAAK,EAAE,YAAY;KACpB;CACF,EACD,EAAE,UAAU,EAAE,IAAI,EAAE,CACrB,CAAC"}

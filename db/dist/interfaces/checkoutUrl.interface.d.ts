@@ -1,0 +1,3 @@
+interface CheckoutUrl {
+    checkoutUrl: string;
+}
