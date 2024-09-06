@@ -91,7 +91,7 @@ export class ProductsController {
   @Post()
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'cover_photo', maxCount: 1 },
-    { name: 'additional_photos', maxCount: 10 } // Adjust maxCount based on your needs
+    { name: 'additional_photos', maxCount: 10 } 
   ], {
     storage: multer.diskStorage({
       destination: './uploads', // Directory where files will be saved
@@ -124,7 +124,7 @@ export class ProductsController {
   @Put(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'cover_photo', maxCount: 1 },
-    { name: 'additional_photos', maxCount: 10 } // Adjust maxCount based on your needs
+    { name: 'additional_photos', maxCount: 10 } 
   ], {
     storage: multer.diskStorage({
       destination: './uploads', // Directory where files will be saved

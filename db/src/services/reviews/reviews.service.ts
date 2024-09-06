@@ -8,24 +8,20 @@ import { Review } from 'src/interfaces/review.interface';
 export class ReviewService {
   constructor(@InjectModel('Review') private readonly reviewModel: Model<Review>) {}
 
-  // Create a new review
   async createReview(reviewDto: ReviewDTO): Promise<Review> {
     
     const newReview = new this.reviewModel(reviewDto);
     return newReview.save();
   }
 
-  // Find all reviews
   async findAllReviews(): Promise<Review[]> {
     return this.reviewModel.find().exec();
   }
 
-  // Find reviews by product
   async findReviewsByProduct(productId: string): Promise<Review[]> {
     return this.reviewModel.find({ product: productId }).exec();
   }
 
-  // Find a review by ID
   async findReviewById(reviewId: string): Promise<Review> {
     const review = await this.reviewModel.findById(reviewId).exec();
     if (!review) {
@@ -34,7 +30,6 @@ export class ReviewService {
     return review;
   }
   
-  // Update a review
   async updateReview(reviewId: string, reviewDto: ReviewDTO): Promise<Review> {
     const updatedReview = await this.reviewModel.findByIdAndUpdate(reviewId, reviewDto, { new: true }).exec();
     if (!updatedReview) {
@@ -43,7 +38,6 @@ export class ReviewService {
     return updatedReview;
   }
 
-  // Delete a review
   async deleteReview(reviewId: string): Promise<Review> {
     const deletedReview = await this.reviewModel.findByIdAndDelete(reviewId).exec();
     if (!deletedReview) {

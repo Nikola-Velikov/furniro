@@ -84,7 +84,6 @@ let MailListService = class MailListService {
         }
     }
     async unsubscribe(email) {
-        console.log(email);
         return this.mailListModel.findOneAndDelete({ email }).exec();
     }
     async create(mailListDto) {

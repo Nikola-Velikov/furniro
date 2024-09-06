@@ -6,21 +6,21 @@ export class MailerService {
   private transporter;
 
   constructor() {
-    // Configure the transporter for nodemailer
+    
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.example.com', // Replace with your SMTP server details
+      host: 'smtp.example.com', 
       port: 587,
       secure: false,
       auth: {
-        user: 'your-email@example.com', // Replace with your email
-        pass: 'your-password', // Replace with your email password
+        user: 'your-email@example.com', 
+        pass: 'your-password',
       },
     });
   }
 
   async sendMail(to: string, subject: string, html: string): Promise<void> {
     const mailOptions = {
-      from: '"Your App" <your-email@example.com>', // Replace with your sender info
+      from: '"Your App" <your-email@example.com>', 
       to,
       subject,
       html,

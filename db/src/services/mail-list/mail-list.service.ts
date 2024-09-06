@@ -26,7 +26,7 @@ export class MailListService {
   async sendMail(to: string, subject: string, html: string): Promise<void> {
     const unsubscribeLink = `http://localhost:3000/mail-list/unsubscribe/${to}`;
     const mailOptions = {
-      from: 'your-email@gmail.com', // Replace with your Gmail address
+      from: 'your-email@gmail.com', 
       to,
       subject,
       html: `${html}<p><a href="${unsubscribeLink}">Unsubscribe</a></p>`,
@@ -69,13 +69,11 @@ export class MailListService {
       },
     ];
 
-    // Fetch all emails from the database
     const mailList = await this.mailListModel.find().exec();
     if (!mailList || mailList.length === 0) {
       return;  // No subscribers to send emails to
     }
 
-    // Cycle through templates and send emails to all subscribers
     for (const [index, subscriber] of mailList.entries()) {
       const template = emailTemplates[index % emailTemplates.length];  // Cycle through templates
       await this.sendMail(subscriber.email, template.subject, template.html);
@@ -83,7 +81,6 @@ export class MailListService {
   }
 
   async unsubscribe(email: string): Promise<MailList | null> {
-    console.log(email);
     
     return this.mailListModel.findOneAndDelete({ email }).exec();
   }

@@ -12,7 +12,6 @@ import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService, private readonly productsService: ProductsService) {}
 
-  // Create a new review
   @Post()
   async createReview(@Body() reviewDto: ReviewDTO): Promise<Review> {
     const productExists = await this.productsService.findOne(reviewDto.product);
@@ -23,7 +22,6 @@ export class ReviewController {
     return this.reviewService.createReview(reviewDto);
   }
 
-  // Get all reviews
   @Get()
   async findAllReviews(): Promise<Review[]> {
     return this.reviewService.findAllReviews();

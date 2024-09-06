@@ -15,11 +15,11 @@ export class FeedbackService {
   }
 
   async findAll(): Promise<Feedback[]> {
-    return await this.feedbackModel.find({ isDeleted: false }).exec();  // Fetch only non-deleted feedback
+    return await this.feedbackModel.find({ isDeleted: false }).exec();  
   }
 
   async findOne(id: string): Promise<Feedback> {
-    const feedback = await this.feedbackModel.findOne({ _id: id, isDeleted: false }).exec();  // Fetch non-deleted feedback by ID
+    const feedback = await this.feedbackModel.findOne({ _id: id, isDeleted: false }).exec();  
     if (!feedback) {
       throw new NotFoundException(`Feedback with ID ${id} not found`);
     }

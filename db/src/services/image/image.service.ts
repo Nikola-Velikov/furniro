@@ -5,7 +5,7 @@ import {  map } from 'rxjs/operators';
 @Injectable()
 export class ImageService {
   private readonly unsplashApiUrl = 'https://api.unsplash.com/search/photos';
-  private readonly unsplashApiKey = 'aXpwes8hsNfBTeJLw9FIVP0BMncGlo0e8V_FW0D2jlQ'; // Replace with your Unsplash API key
+  private readonly unsplashApiKey = 'aXpwes8hsNfBTeJLw9FIVP0BMncGlo0e8V_FW0D2jlQ'; 
 
   constructor(private readonly httpService: HttpService) {}
 

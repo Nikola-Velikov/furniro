@@ -12,18 +12,16 @@ import { SortOptions } from 'src/interfaces/sortOptions.interface';
 export class ProductsService {
   constructor(
     @InjectModel('Product') private readonly productModel: Model<Product>,
-    private readonly reviewService: ReviewService, // Inject ReviewService
+    private readonly reviewService: ReviewService, 
   ) {}
 
   async getProductCount(category?: string): Promise<number> {
     let filter = {};
 
-    // If a category is provided, filter by category
     if (category) {
-      filter = { category }; // Assuming category is stored as an ID or name
+      filter = { category }; 
     }
 
-    // Count products based on the filter
     const count = await this.productModel.countDocuments(filter).exec();
     return count;
   }
@@ -49,7 +47,6 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<any | null> {
-    // Fetch the product and populate category
     const product = await this.productModel
       .findById(id)
       .populate('category')
@@ -58,7 +55,6 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
-    // Fetch reviews for the product
     const reviews = await this.reviewService.findReviewsByProduct(id);
     let avgRating = 0;
     const discountPercent = product.discount || 0;
@@ -78,7 +74,7 @@ export class ProductsService {
     if (product.category) {
       relatedProducts = await this.productModel
         .find({ category: product.category._id, _id: { $ne: id } })
-        .limit(4) // Limit to 4 products
+        .limit(4) 
         .populate('category')
         .exec();
     }
@@ -117,7 +113,6 @@ export class ProductsService {
     await this.productModel.deleteMany({ category: categoryId }).exec();
   }
 
-  // Pagination without category filter
   async findPaginated(options: SortOptions): Promise<TotalProducts> {
     const products = await this.productModel
       .find()
@@ -136,14 +131,13 @@ export class ProductsService {
     return result;
   }
 
-  // Pagination with category filter
   async findPaginatedByCategory(
     categoryId: string,
     options: SortOptions,
   ): Promise<TotalProducts> {
     const products = await this.productModel
       .find({ category: categoryId })
-      .sort(options.sort) // Apply sorting
+      .sort(options.sort) 
       .skip((options.page - 1) * options.limit)
       .limit(options.limit)
       .populate('category')

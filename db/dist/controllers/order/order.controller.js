@@ -35,7 +35,6 @@ let OrderController = class OrderController {
         });
     }
     async createCheckoutSession(order, promoCode) {
-        console.log(promoCode);
         await this.orderService.create(order);
         if (!order || !order.products || order.products.length === 0) {
             throw new common_1.NotFoundException('Order details are missing');
@@ -53,10 +52,8 @@ let OrderController = class OrderController {
                 throw new common_1.NotFoundException(`Too much quantity for product ${productDetails.name}`);
             }
             const discountPercentage = promoCode ? await this.promoCodeService.validatePromoCode(promoCode) : 0;
-            console.log(discountPercentage);
             const unitAmount = productDetails.discountedPrice;
             const discountedPrice = discountPercentage > 0 ? (unitAmount - (unitAmount * discountPercentage / 100)).toFixed(2) : unitAmount;
-            console.log(discountedPrice);
             lineItems.push({
                 price_data: {
                     currency: 'bgn',

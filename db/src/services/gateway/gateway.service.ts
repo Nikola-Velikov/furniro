@@ -3,7 +3,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketSe
 import { Server, Socket } from 'socket.io';
 
 @Injectable()
-@WebSocketGateway({ cors: true }) // Enable CORS for the gateway
+@WebSocketGateway({ cors: true }) 
 export class GatewayService implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() server: Server;

@@ -32,7 +32,6 @@ export class OrderController {
 
   @Post()
   async createCheckoutSession(@Body() order: OrderDTO, @Query('promoCode') promoCode?: string): Promise<CheckoutUrl> {
-    console.log(promoCode);
     
     await this.orderService.create(order);
 
@@ -56,12 +55,10 @@ const lineItems = [];
         }
 
         const discountPercentage = promoCode ? await this.promoCodeService.validatePromoCode(promoCode) : 0;
-        console.log(discountPercentage);
         
 
-        const unitAmount = productDetails.discountedPrice // Stripe uses cents, so multiply by 100
+        const unitAmount = productDetails.discountedPrice 
         const discountedPrice = discountPercentage > 0 ? (unitAmount - (unitAmount * discountPercentage / 100) ).toFixed(2): unitAmount;
-  console.log(discountedPrice);
   
         lineItems.push({
           price_data: {
@@ -95,11 +92,9 @@ const lineItems = [];
     const session = await this.stripe.checkout.sessions.retrieve(sessionId);
     
     if (session.payment_status === 'paid') {
-       // this.gatewayService.handleDiscountOffer(null, { customer_email: session.customer_email });
        const payload = { customer_email: session.customer_email };
        this.gatewayService.sendEmailPayloadToClients(payload);
     
-       // Optionally send the email payload to another microservice
        const promoCode = await this.promoCodeService.generatePromoCode();
        await this.promoCodeService.createPromoCode(promoCode)
        const observable$ = this.client.emit('payment.success', { customer_email: session.customer_email, promoCode: promoCode});
