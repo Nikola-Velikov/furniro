@@ -39,7 +39,7 @@ export class MailListService {
     }
   }
 
-  async subscribe(emailDto: MailListDTO): Promise<any> {
+  async subscribe(emailDto: MailListDTO): Promise<MailList> {
     const newEmail = new this.mailListModel({ email: emailDto.email });
     return newEmail.save();
   }
@@ -82,7 +82,7 @@ export class MailListService {
     }
   }
 
-  async unsubscribe(email: string): Promise<any> {
+  async unsubscribe(email: string): Promise<MailList | null> {
     console.log(email);
     
     return this.mailListModel.findOneAndDelete({ email }).exec();

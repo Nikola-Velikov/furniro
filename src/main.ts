@@ -7,7 +7,7 @@ import * as express from 'express';
 import { ValidateObjectIdPipe } from './pipes/validate-object-id.pipe';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  //app.useGlobalPipes(new ValidateObjectIdPipe());
+  // app.useGlobalPipes(new ValidateObjectIdPipe());
   app.useStaticAssets(join(__dirname, '..', 'uploads'));
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   const config = new DocumentBuilder()

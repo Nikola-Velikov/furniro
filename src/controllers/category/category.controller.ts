@@ -18,9 +18,10 @@ import { CategoryService } from 'src/services/category/category.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from 'src/services/products/products.service';
 
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoryController {
   constructor(
@@ -100,14 +101,14 @@ export class CategoryController {
 
     const products = await this.productsService.findByCategory(categoryId);
 
-    if (products.length > 0) {
+    if (products.products.length > 0) {
       if (forceDelete === 'true') {
-        for (const product of products) {
+        for (const product of products.products) {
           await this.productsService.remove(product._id);
         }
         await this.categoryService.delete(categoryId);
 
-        return `Category and its ${products.length} products have been deleted.`;
+        return `Category and its ${products.products.length} products have been deleted.`;
       } else {
         return 'Category contains products. Set forceDelete=true to delete both category and its products.';
       }

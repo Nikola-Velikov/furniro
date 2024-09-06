@@ -4,8 +4,9 @@ import { log } from 'console';
 import { ReviewDTO } from 'src/dto/review';
 import { Review } from 'src/interfaces/review.interface';
 import { ProductsService } from 'src/services/products/products.service';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService, private readonly productsService: ProductsService) {}

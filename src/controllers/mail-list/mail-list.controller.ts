@@ -1,17 +1,22 @@
 import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { MailListDTO } from 'src/dto/mailList';
 import { MailList } from 'src/interfaces/mailList';
 import { MailListService } from 'src/services/mail-list/mail-list.service';
 
-
+@ApiTags('Newsletters')
 @Controller('mail-list')
 export class MailListController {
   constructor(private readonly mailListService: MailListService) {}
-
+  
   @Post()
   async create(@Body() mailListDto: MailListDTO): Promise<MailList> {
-    return this.mailListService.create(mailListDto);
-  }
+      return this.mailListService.create(mailListDto);
+    }
+    @Get('unsubscribe/:email')
+    async unsubscribe(@Param('email') email: string) {
+      return this.mailListService.unsubscribe(email);
+    }
 
   @Get()
   async findAll(): Promise<MailList[]> {
@@ -33,10 +38,6 @@ export class MailListController {
     return this.mailListService.delete(id);
   }
 
-  @Get('unsubscribe/:email')
-  async unsubscribe(@Param('email') email: string) {
-    return this.mailListService.unsubscribe(email);
-  }
 
   
 }

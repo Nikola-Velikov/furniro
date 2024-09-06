@@ -38,7 +38,7 @@ export class FeedbackService {
     return updatedFeedback;
   }
 
-  async delete(id: string): Promise<any> {
+  async delete(id: string): Promise<Feedback> {
     const result = await this.feedbackModel.findByIdAndUpdate(
       id,
       { isDeleted: true },  

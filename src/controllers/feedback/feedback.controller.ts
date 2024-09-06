@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FeedbackDTO } from 'src/dto/feedback';
 import { Feedback } from 'src/interfaces/feedback.interface';
 import { FeedbackService } from 'src/services/feedback/feedback.service';
 
+@ApiTags('Feedbacks')
 @Controller('feedback')
 export class FeedbackController {
     constructor(private feedbackService: FeedbackService){}

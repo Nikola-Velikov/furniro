@@ -3,15 +3,20 @@ import { ProductsService } from 'src/services/products/products.service';
 import { CategoryService } from 'src/services/category/category.service';
 import { Product } from 'src/interfaces/product.interface';
 import { ProductDTO } from 'src/dto/product';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import * as path from 'path';
 import * as multer from 'multer';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Types } from 'mongoose';
+import { SortOptions } from 'src/interfaces/sortOptions.interface';
+import { TotalProducts } from 'src/interfaces/totalProducts.interface';
 
+@ApiTags('Products')
 @Controller('products') 
 export class ProductsController {
   constructor(private readonly productsService: ProductsService, private categoryService: CategoryService) {}
+
+  
   
   @ApiResponse({
     status: 200,
@@ -26,7 +31,7 @@ export class ProductsController {
     @Query('productNumber') productNumber?: number,  
     @Query('sortBy') sortBy?: 'name' | 'price' | 'createdAt',  
     @Query('sortDirection') sortDirection: 'asc' | 'desc' = 'asc',  
-  ): Promise<Product[] | string> {
+  ): Promise<Product[] | string | TotalProducts> {
     
     const options: any = {
       sort: {},  

@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 @Injectable()
 export class ValidateObjectIdPipe implements PipeTransform {
-  async transform(value: any, { metatype }: ArgumentMetadata) {
+  async transform(value: string | number, { metatype }: ArgumentMetadata) {
     if (!Types.ObjectId.isValid(value)) {
       throw new BadRequestException(`Invalid ID format: ${value}`);
     }

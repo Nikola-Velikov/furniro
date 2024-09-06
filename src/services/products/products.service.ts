@@ -5,6 +5,8 @@ import { ProductDTO } from 'src/dto/product';
 import { Product } from 'src/interfaces/product.interface';
 import { ReviewService } from '../reviews/reviews.service';
 import { Review } from 'src/interfaces/review.interface';
+import { TotalProducts } from 'src/interfaces/totalProducts.interface';
+import { SortOptions } from 'src/interfaces/sortOptions.interface';
 
 @Injectable()
 export class ProductsService {
@@ -13,19 +15,32 @@ export class ProductsService {
     private readonly reviewService: ReviewService, // Inject ReviewService
   ) {}
 
+  async getProductCount(category?: string): Promise<number> {
+    let filter = {};
+
+    // If a category is provided, filter by category
+    if (category) {
+      filter = { category }; // Assuming category is stored as an ID or name
+    }
+
+    // Count products based on the filter
+    const count = await this.productModel.countDocuments(filter).exec();
+    return count;
+  }
   create(product: ProductDTO): Promise<Product> {
     const createdProduct = new this.productModel(product);
     return createdProduct.save();
   }
 
-  async findAll(sort: any): Promise<any> {
+  async findAll(sort: string): Promise<TotalProducts> {
     const products = await this.productModel
       .find()
-      .sort(sort) // Apply sorting if any
+      .sort(sort)
       .populate('category')
       .exec();
 
-    const totalProductsCount = products.length;
+      const totalProductsCount = await this.getProductCount();
+
     const result = {
       products: products,
       totalProductsCount: totalProductsCount,
@@ -81,13 +96,16 @@ export class ProductsService {
     return this.productModel.findByIdAndDelete(id).exec();
   }
 
-  async findByCategory(categoryId: string, sort?: any): Promise<any> {
+  async findByCategory(
+    categoryId: string,
+    sort?: string,
+  ): Promise<TotalProducts> {
     const products = await this.productModel
       .find({ category: categoryId })
-      .sort(sort) // Apply sorting if any
+      .sort(sort)
       .populate('category')
       .exec();
-    const totalProductsCount = products.length;
+    const totalProductsCount = await this.getProductCount(categoryId);
     const result = {
       products: products,
       totalProductsCount: totalProductsCount,
@@ -100,7 +118,7 @@ export class ProductsService {
   }
 
   // Pagination without category filter
-  async findPaginated(options: any): Promise<any> {
+  async findPaginated(options: SortOptions): Promise<TotalProducts> {
     const products = await this.productModel
       .find()
       .sort(options.sort)
@@ -109,7 +127,8 @@ export class ProductsService {
       .populate('category')
       .exec();
 
-      const totalProductsCount = products.length;
+    const totalProductsCount = await this.getProductCount();
+
     const result = {
       products: products,
       totalProductsCount: totalProductsCount,
@@ -120,8 +139,8 @@ export class ProductsService {
   // Pagination with category filter
   async findPaginatedByCategory(
     categoryId: string,
-    options: any,
-  ): Promise<any> {
+    options: SortOptions,
+  ): Promise<TotalProducts> {
     const products = await this.productModel
       .find({ category: categoryId })
       .sort(options.sort) // Apply sorting
@@ -130,11 +149,12 @@ export class ProductsService {
       .populate('category')
       .exec();
 
-      const totalProductsCount = products.length;
-      const result = {
-        products: products,
-        totalProductsCount: totalProductsCount,
-      };
-      return result;
+    const totalProductsCount = await this.getProductCount(categoryId);
+
+    const result = {
+      products: products,
+      totalProductsCount: totalProductsCount,
+    };
+    return result;
   }
 }

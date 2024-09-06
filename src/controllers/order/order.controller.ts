@@ -1,10 +1,12 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Res, NotFoundException, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { OrderDTO } from 'src/dto/order';
 import { Order } from 'src/interfaces/order.interface';
 import { OrderService } from 'src/services/order/order.service';
 import { ProductsService } from 'src/services/products/products.service';
 import Stripe from 'stripe';
 
+@ApiTags('Orders')
 @Controller('orders')
 export class OrderController {
     private stripe: Stripe;
@@ -15,7 +17,7 @@ export class OrderController {
   }
 
   @Post()
-  async createCheckoutSession(@Body() order: OrderDTO): Promise<any> {
+  async createCheckoutSession(@Body() order: OrderDTO): Promise<CheckoutUrl> {
     console.log(order);
     
     await this.orderService.create(order);
@@ -56,7 +58,7 @@ const lineItems = [];
         payment_method_types: ['card', ],
         line_items: lineItems,
       mode: 'payment',
-      customer_email: order.email,  
+      customer_email: order.email,
       success_url: 'http://localhost:3000/orders/success?session_id={CHECKOUT_SESSION_ID}',  
       cancel_url: 'http://localhost:3000/cancel',  
     });
@@ -67,7 +69,7 @@ const lineItems = [];
   }
 
   @Get('success')
-  async handleSuccess(@Query('session_id') sessionId: string, @Res() res): Promise<any> {
+  async handleSuccess(@Query('session_id') sessionId: string, @Res() res): Promise<void | NotFoundException> {
     const session = await this.stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
@@ -78,7 +80,7 @@ const lineItems = [];
   }
 
   @Get('cancel')
-  async handleCancel(@Res() res): Promise<any> {
+  async handleCancel(@Res() res): Promise<void> {
     return res.redirect('http://localhost:3000/cancel-page'); 
   }
   @Get()
