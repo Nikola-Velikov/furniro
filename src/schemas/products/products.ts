@@ -55,7 +55,7 @@ export const ProductSchema = new Schema({
   },
   category: {
     type: Types.ObjectId,
-    ref: 'Category', // Make sure this matches the name of your Category model
+    ref: 'Category', 
     required: true,
   },
 }, { timestamps: true }); // Automatically adds createdAt and updatedAt fields

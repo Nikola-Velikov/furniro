@@ -83,7 +83,7 @@ export class CategoryController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Category> {
     if (file) {
-      updateCategoryDto.cover_photo = file.filename; // Correctly set the cover_photo property
+      updateCategoryDto.cover_photo = file.filename; 
     }
     return this.categoryService.update(id, updateCategoryDto);
   }

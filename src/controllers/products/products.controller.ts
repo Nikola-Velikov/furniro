@@ -22,14 +22,14 @@ export class ProductsController {
   @Get()
   async findAll(
     @Query('category') category?: string,
-    @Query('page') page?: number,  // Optional
-    @Query('productNumber') productNumber?: number,  // Optional
-    @Query('sortBy') sortBy?: 'name' | 'price' | 'createdAt',  // Sorting field (name, price, or createdAt)
-    @Query('sortDirection') sortDirection: 'asc' | 'desc' = 'asc',  // Sorting direction (asc or desc)
+    @Query('page') page?: number,  
+    @Query('productNumber') productNumber?: number,  
+    @Query('sortBy') sortBy?: 'name' | 'price' | 'createdAt',  
+    @Query('sortDirection') sortDirection: 'asc' | 'desc' = 'asc',  
   ): Promise<Product[] | string> {
     
     const options: any = {
-      sort: {},  // Sorting options
+      sort: {},  
     };
 
     if (category) {
@@ -49,11 +49,10 @@ export class ProductsController {
     }
   
     if (page && productNumber) {
-      options.page = Math.max(page, 1);  // Ensure page is at least 1
-      options.limit = Math.max(productNumber, 1);  // Ensure at least 1 product
+      options.page = Math.max(page, 1);  
+      options.limit = Math.max(productNumber, 1); 
     }
   
-    // If category is provided, fetch products by category
     if (category) {
       if (!page && !productNumber) {
         // If only category is provided (no pagination), return all products in the category

@@ -4,22 +4,88 @@ import { Model } from 'mongoose';
 import { MailListDTO } from 'src/dto/mailList';
 import { MailList } from 'src/interfaces/mailList';
 import * as nodemailer from 'nodemailer';
-
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class MailListService {
-    private transporter;
+  private transporter;
 
   constructor(@InjectModel('MailList') private readonly mailListModel: Model<MailList>) {
     this.transporter = nodemailer.createTransport({
-        host: 'smtp.example.com', // Replace with your SMTP server details
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'furniro2024@gmail.com', // Replace with your email
-          pass: 'furniro123', // Replace with your email password
-        },
-      });
+      service: 'gmail', // Use Gmail service
+      auth: {
+        user: 'furniro2024@gmail.com', // Replace with your Gmail address
+        pass: 'ekrm mnph abis covl', // Replace with your Gmail app password
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+  }
+
+  async sendMail(to: string, subject: string, html: string): Promise<void> {
+    const unsubscribeLink = `http://localhost:3000/mail-list/unsubscribe/${to}`;
+    const mailOptions = {
+      from: 'your-email@gmail.com', // Replace with your Gmail address
+      to,
+      subject,
+      html: `${html}<p><a href="${unsubscribeLink}">Unsubscribe</a></p>`,
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
+
+  async subscribe(emailDto: MailListDTO): Promise<any> {
+    const newEmail = new this.mailListModel({ email: emailDto.email });
+    return newEmail.save();
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS)  
+  async sendNewsletter(): Promise<void> {
+    const emailTemplates = [
+      {
+        subject: 'Newsletter - Issue 1',
+        html: `<p>Welcome to our newsletter!</p><p>This is the first issue.</p>`,
+      },
+      {
+        subject: 'Special Offer',
+        html: `<p>We have an exclusive offer just for you!</p><p><a href="#">Click here</a> to learn more.</p>`,
+      },
+      {
+        subject: 'Upcoming Events',
+        html: `<p>Check out the upcoming events we have for you!</p>`,
+      },
+      {
+        subject: 'Product Spotlight',
+        html: `<p>Discover our latest product in the spotlight.</p>`,
+      },
+      {
+        subject: 'Thank You for Subscribing',
+        html: `<p>Thank you for being a loyal subscriber.</p><p>Stay tuned for more updates.</p>`,
+      },
+    ];
+
+    // Fetch all emails from the database
+    const mailList = await this.mailListModel.find().exec();
+    if (!mailList || mailList.length === 0) {
+      return;  // No subscribers to send emails to
+    }
+
+    // Cycle through templates and send emails to all subscribers
+    for (const [index, subscriber] of mailList.entries()) {
+      const template = emailTemplates[index % emailTemplates.length];  // Cycle through templates
+      await this.sendMail(subscriber.email, template.subject, template.html);
+    }
+  }
+
+  async unsubscribe(email: string): Promise<any> {
+    console.log(email);
+    
+    return this.mailListModel.findOneAndDelete({ email }).exec();
   }
 
   async create(mailListDto: MailListDTO): Promise<MailList> {
@@ -50,9 +116,8 @@ export class MailListService {
   async delete(id: string): Promise<MailList> {
     const result = await this.mailListModel.findByIdAndDelete(id).exec();
     if (!result) {
-        throw new NotFoundException('MailList entry not found');
+      throw new NotFoundException('MailList entry not found');
     }
     return result;
   }
-  
 }

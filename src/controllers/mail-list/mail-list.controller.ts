@@ -28,9 +28,14 @@ export class MailListController {
     return this.mailListService.update(id, mailListDto);
   }
 
-  @Delete('unsubscribe/:id')
+  @Delete(':id')
   async delete(@Param('id') id: string): Promise<MailList> {
     return this.mailListService.delete(id);
+  }
+
+  @Get('unsubscribe/:email')
+  async unsubscribe(@Param('email') email: string) {
+    return this.mailListService.unsubscribe(email);
   }
 
   
