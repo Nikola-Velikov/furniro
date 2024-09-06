@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger';
 import { MailListDTO } from 'src/dto/mailList';
 import { MailList } from 'src/interfaces/mailList';
+import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 import { MailListService } from 'src/services/mail-list/mail-list.service';
 
 @ApiTags('Newsletters')
@@ -24,17 +25,17 @@ export class MailListController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<MailList> {
+  async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<MailList> {
     return this.mailListService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() mailListDto: MailListDTO): Promise<MailList> {
+  async update(@Param('id', ValidateObjectIdPipe) id: string, @Body() mailListDto: MailListDTO): Promise<MailList> {
     return this.mailListService.update(id, mailListDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<MailList> {
+  async delete(@Param('id', ValidateObjectIdPipe) id: string): Promise<MailList> {
     return this.mailListService.delete(id);
   }
 

@@ -5,6 +5,7 @@ import { ReviewDTO } from 'src/dto/review';
 import { Review } from 'src/interfaces/review.interface';
 import { ProductsService } from 'src/services/products/products.service';
 import { ApiTags } from '@nestjs/swagger';
+import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -35,19 +36,19 @@ export class ReviewController {
   }
 
   @Get(':id')
-  async findReviewById(@Param('id') id: string): Promise<Review> {
+  async findReviewById(@Param('id', ValidateObjectIdPipe) id: string): Promise<Review> {
     return this.reviewService.findReviewById(id);
   }
 
 
   @Put(':id')
-  async updateReview(@Param('id') id: string, @Body() reviewDto: ReviewDTO): Promise<Review> {
+  async updateReview(@Param('id', ValidateObjectIdPipe) id: string, @Body() reviewDto: ReviewDTO): Promise<Review> {
     return this.reviewService.updateReview(id, reviewDto);
   }
 
  
   @Delete(':id')
-  async deleteReview(@Param('id') id: string): Promise<Review> {
+  async deleteReview(@Param('id', ValidateObjectIdPipe) id: string): Promise<Review> {
     return this.reviewService.deleteReview(id);
   }
 }

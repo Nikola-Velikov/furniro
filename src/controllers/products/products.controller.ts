@@ -10,6 +10,7 @@ import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestj
 import { Types } from 'mongoose';
 import { SortOptions } from 'src/interfaces/sortOptions.interface';
 import { TotalProducts } from 'src/interfaces/totalProducts.interface';
+import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 
 @ApiTags('Products')
 @Controller('products') 
@@ -83,7 +84,7 @@ export class ProductsController {
     
   })
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Product | null> {
+  async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<Product | null> {
     return this.productsService.findOne(id);
   }
 
@@ -134,7 +135,7 @@ export class ProductsController {
     }),
   }))
   async update(
-    @Param('id') id: string,
+    @Param('id', ValidateObjectIdPipe) id: string,
     @Body() productDto: ProductDTO,
     @UploadedFiles() files: { cover_photo?: Express.Multer.File[], additional_photos?: Express.Multer.File[] }
   ): Promise<Product | null> {
@@ -150,7 +151,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Product | null> {
+  async remove(@Param('id', ValidateObjectIdPipe) id: string): Promise<Product | null> {
     return this.productsService.remove(id);
   }
 }

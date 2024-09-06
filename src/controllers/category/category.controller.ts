@@ -20,6 +20,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from 'src/services/products/products.service';
+import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -62,7 +63,7 @@ export class CategoryController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Category> {
+  async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<Category> {
     return this.categoryService.findOne(id);
   }
 
@@ -79,7 +80,7 @@ export class CategoryController {
     }),
   )
   async update(
-    @Param('id') id: string,
+    @Param('id', ValidateObjectIdPipe) id: string,
     @Body() updateCategoryDto: CategoryDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Category> {
@@ -91,7 +92,7 @@ export class CategoryController {
 
   @Delete(':id')
   async deleteCategory(
-    @Param('id') categoryId: string,
+    @Param('id', ValidateObjectIdPipe) categoryId: string,
     @Query('forceDelete') forceDelete: string,
   ): Promise<string> {
     const category = await this.categoryService.findOne(categoryId);

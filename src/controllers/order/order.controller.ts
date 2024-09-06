@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, Res, NotFoundException
 import { ApiTags } from '@nestjs/swagger';
 import { OrderDTO } from 'src/dto/order';
 import { Order } from 'src/interfaces/order.interface';
+import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 import { OrderService } from 'src/services/order/order.service';
 import { ProductsService } from 'src/services/products/products.service';
 import Stripe from 'stripe';
@@ -89,17 +90,17 @@ const lineItems = [];
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Order> {
+  async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<Order> {
     return this.orderService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateOrderDto: OrderDTO): Promise<Order> {
+  async update(@Param('id', ValidateObjectIdPipe) id: string, @Body() updateOrderDto: OrderDTO): Promise<Order> {
     return this.orderService.update(id, updateOrderDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<Order> {
+  async delete(@Param('id', ValidateObjectIdPipe) id: string): Promise<Order> {
     return this.orderService.delete(id);
   }
 }

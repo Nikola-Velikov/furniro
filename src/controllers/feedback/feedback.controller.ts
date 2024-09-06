@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { ApiTags } from '@nestjs/swagger';
 import { FeedbackDTO } from 'src/dto/feedback';
 import { Feedback } from 'src/interfaces/feedback.interface';
+import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 import { FeedbackService } from 'src/services/feedback/feedback.service';
 
 @ApiTags('Feedbacks')
@@ -15,7 +16,7 @@ export class FeedbackController {
     }
 
     @Get(':id')
-    async findFeedbackById(@Param('id') id: string): Promise<Feedback>{
+    async findFeedbackById(@Param('id', ValidateObjectIdPipe) id: string): Promise<Feedback>{
         return await this.feedbackService.findOne(id);
     }
 
@@ -25,12 +26,12 @@ export class FeedbackController {
     }
 
     @Put(':id')
-    async updateFeedback(@Param('id') id: string, @Body() reviewDto: FeedbackDTO): Promise<Feedback> {
+    async updateFeedback(@Param('id', ValidateObjectIdPipe) id: string, @Body() reviewDto: FeedbackDTO): Promise<Feedback> {
       return this.feedbackService.update(id, reviewDto);
     }
   
     @Delete(':id')
-    async deleteFeedback(@Param('id') id: string): Promise<Feedback>{
+    async deleteFeedback(@Param('id', ValidateObjectIdPipe) id: string): Promise<Feedback>{
 
         return await this.feedbackService.delete(id);
     }
