@@ -12,10 +12,10 @@ export class MailListService {
 
   constructor(@InjectModel('MailList') private readonly mailListModel: Model<MailList>) {
     this.transporter = nodemailer.createTransport({
-      service: 'gmail', // Use Gmail service
+      service: 'gmail', 
       auth: {
-        user: 'furniro2024@gmail.com', // Replace with your Gmail address
-        pass: 'ekrm mnph abis covl', // Replace with your Gmail app password
+        user: 'furniro2024@gmail.com', 
+        pass: 'ekrm mnph abis covl', 
       },
       tls: {
         rejectUnauthorized: false,

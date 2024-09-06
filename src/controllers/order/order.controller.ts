@@ -1,25 +1,38 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Res, NotFoundException, Query } from '@nestjs/common';
+import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
+import { lastValueFrom } from 'rxjs';
+import { Socket } from 'socket.io';
 import { OrderDTO } from 'src/dto/order';
 import { Order } from 'src/interfaces/order.interface';
 import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
+import { GatewayService } from 'src/services/gateway/gateway.service';
 import { OrderService } from 'src/services/order/order.service';
 import { ProductsService } from 'src/services/products/products.service';
+import { PromoCodeService } from 'src/services/promo-code/promo-code.service';
 import Stripe from 'stripe';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrderController {
     private stripe: Stripe;
-  constructor(private readonly orderService: OrderService, private readonly productService: ProductsService) {
+  constructor(private readonly orderService: OrderService, private readonly productService: ProductsService, private readonly gatewayService: GatewayService, private readonly promoCodeService: PromoCodeService,) {
     this.stripe = new Stripe('sk_test_51NmgFuKfIAbVTk5mD0KYAAWCdRfPkb14ViemJ6ZbojShgpm17Zge1D8KelnoeNohSsG4cUxquvfOMVoxnkKmzQ8n00YI3fbhqs', {
         apiVersion: "2024-06-20",
       });
   }
+  @Client({
+    transport: Transport.TCP,
+    options: {
+      host: 'localhost',
+      port: 3001,
+    },
+  })
+  private client: ClientProxy;
 
   @Post()
-  async createCheckoutSession(@Body() order: OrderDTO): Promise<CheckoutUrl> {
-    console.log(order);
+  async createCheckoutSession(@Body() order: OrderDTO, @Query('promoCode') promoCode?: string): Promise<CheckoutUrl> {
+    console.log(promoCode);
     
     await this.orderService.create(order);
 
@@ -41,6 +54,14 @@ const lineItems = [];
           throw new NotFoundException(`Too much quantity for product ${productDetails.name}`);
 
         }
+
+        const discountPercentage = promoCode ? await this.promoCodeService.validatePromoCode(promoCode) : 0;
+        console.log(discountPercentage);
+        
+
+        const unitAmount = productDetails.discountedPrice // Stripe uses cents, so multiply by 100
+        const discountedPrice = discountPercentage > 0 ? (unitAmount - (unitAmount * discountPercentage / 100) ).toFixed(2): unitAmount;
+  console.log(discountedPrice);
   
         lineItems.push({
           price_data: {
@@ -49,7 +70,7 @@ const lineItems = [];
               name: product.name,   
               images:['http://localhost:3000/uploads/' + productDetails.coverPhoto],  
             },
-            unit_amount: productDetails.discountedPrice * 100, // Stripe uses cents, so multiply by 100
+            unit_amount: discountedPrice*100, 
           },
           quantity: product.quantity,
         });
@@ -72,8 +93,17 @@ const lineItems = [];
   @Get('success')
   async handleSuccess(@Query('session_id') sessionId: string, @Res() res): Promise<void | NotFoundException> {
     const session = await this.stripe.checkout.sessions.retrieve(sessionId);
-
+    
     if (session.payment_status === 'paid') {
+       // this.gatewayService.handleDiscountOffer(null, { customer_email: session.customer_email });
+       const payload = { customer_email: session.customer_email };
+       this.gatewayService.sendEmailPayloadToClients(payload);
+    
+       // Optionally send the email payload to another microservice
+       const promoCode = await this.promoCodeService.generatePromoCode();
+       await this.promoCodeService.createPromoCode(promoCode)
+       const observable$ = this.client.emit('payment.success', { customer_email: session.customer_email, promoCode: promoCode});
+       await lastValueFrom(observable$);
       return res.redirect('http://localhost:3000/success-page'); 
     } else {
       throw new NotFoundException('Payment not completed');
