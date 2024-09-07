@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   const config = new DocumentBuilder()
     .setTitle('Products API')
-    .setDescription('Backend endpoint for Furniro')
+    .setDescription('Backend endpoints for Furniro')
     .setVersion('1.0')
     .build();
     

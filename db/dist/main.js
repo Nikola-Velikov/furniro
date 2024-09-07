@@ -11,7 +11,7 @@ async function bootstrap() {
     app.use('/uploads', express.static((0, path_1.join)(__dirname, '..', 'uploads')));
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Products API')
-        .setDescription('Backend endpoint for Furniro')
+        .setDescription('Backend endpoints for Furniro')
         .setVersion('1.0')
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
