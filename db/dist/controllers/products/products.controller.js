@@ -87,10 +87,11 @@ let ProductsController = class ProductsController {
 };
 exports.ProductsController = ProductsController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve all products' }),
     (0, swagger_1.ApiResponse)({
         status: 200,
         description: 'List of all products',
-        type: product_1.ProductDTO,
+        type: [product_1.ProductDTO],
     }),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('category')),
@@ -108,6 +109,12 @@ __decorate([
         description: 'Gives one product',
         type: product_1.ProductDTO,
     }),
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve a product by ID' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Details of a single product',
+        type: product_1.ProductDTO,
+    }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
@@ -115,6 +122,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findOne", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new product' }),
+    (0, swagger_1.ApiBody)({ type: product_1.ProductDTO, description: 'Product details' }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Product created successfully',
+        type: product_1.ProductDTO,
+    }),
     (0, common_1.Post)(),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
         { name: 'cover_photo', maxCount: 1 },
@@ -135,9 +149,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "create", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Update a product by ID' }),
+    (0, swagger_1.ApiBody)({ type: product_1.ProductDTO, description: 'Updated product details' }),
     (0, swagger_1.ApiResponse)({
         status: 200,
-        description: 'Updates one of the products',
+        description: 'Product updated successfully',
         type: product_1.ProductDTO,
     }),
     (0, common_1.Put)(':id'),
@@ -161,6 +177,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "update", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Delete a product by ID' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Product deleted successfully',
+        type: product_1.ProductDTO,
+    }),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),

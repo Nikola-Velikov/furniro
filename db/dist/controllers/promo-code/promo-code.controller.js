@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PromoCodeController = void 0;
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 const promo_code_service_1 = require("../../services/promo-code/promo-code.service");
 let PromoCodeController = class PromoCodeController {
     constructor(promoCodeService) {
@@ -28,6 +29,12 @@ let PromoCodeController = class PromoCodeController {
 };
 exports.PromoCodeController = PromoCodeController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new promo code' }),
+    (0, swagger_1.ApiBody)({ description: 'Promo code to create', type: String }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Promo code created successfully',
+    }),
     (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)('code')),
     __metadata("design:type", Function),
@@ -35,6 +42,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PromoCodeController.prototype, "createPromoCode", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Mark a promo code as used' }),
+    (0, swagger_1.ApiBody)({ description: 'Promo code to mark as used', type: String }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Promo code marked as used',
+    }),
     (0, common_1.Post)('mark-used'),
     __param(0, (0, common_1.Body)('code')),
     __metadata("design:type", Function),
@@ -42,6 +55,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PromoCodeController.prototype, "markPromoCodeAsUsed", null);
 exports.PromoCodeController = PromoCodeController = __decorate([
+    (0, swagger_1.ApiTags)('Promo Codes'),
     (0, common_1.Controller)('promo-codes'),
     __metadata("design:paramtypes", [promo_code_service_1.PromoCodeService])
 ], PromoCodeController);

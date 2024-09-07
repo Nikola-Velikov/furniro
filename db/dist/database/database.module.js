@@ -17,7 +17,7 @@ exports.DatabaseModule = DatabaseModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot(),
-            mongoose_1.MongooseModule.forRoot('mongodb://127.0.0.1:27017/furniro')
+            mongoose_1.MongooseModule.forRoot('mongodb://mongo:YLOVgMCukgXMaJtBhUaxUHaZlbfzFeJs@autorack.proxy.rlwy.net:36381')
         ],
     })
 ], DatabaseModule);

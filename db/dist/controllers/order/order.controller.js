@@ -121,6 +121,11 @@ __decorate([
 ], OrderController.prototype, "client", void 0);
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new checkout session' }),
+    (0, swagger_1.ApiBody)({ type: order_1.OrderDTO, description: 'Order details' }),
+    (0, swagger_1.ApiQuery)({ name: 'promoCode', required: false, description: 'Optional promo code for discount' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Checkout session created successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Order or product details missing' }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Query)('promoCode')),
     __metadata("design:type", Function),
@@ -129,6 +134,10 @@ __decorate([
 ], OrderController.prototype, "createCheckoutSession", null);
 __decorate([
     (0, common_1.Get)('success'),
+    (0, swagger_1.ApiOperation)({ summary: 'Handle successful payment' }),
+    (0, swagger_1.ApiQuery)({ name: 'session_id', description: 'Stripe session ID' }),
+    (0, swagger_1.ApiResponse)({ status: 302, description: 'Redirects to success page' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Payment not completed' }),
     __param(0, (0, common_1.Query)('session_id')),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -137,6 +146,8 @@ __decorate([
 ], OrderController.prototype, "handleSuccess", null);
 __decorate([
     (0, common_1.Get)('cancel'),
+    (0, swagger_1.ApiOperation)({ summary: 'Handle payment cancellation' }),
+    (0, swagger_1.ApiResponse)({ status: 302, description: 'Redirects to cancel page' }),
     __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -144,12 +155,18 @@ __decorate([
 ], OrderController.prototype, "handleCancel", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve all orders' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Orders retrieved successfully', type: [order_1.OrderDTO] }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve a specific order by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Order ID' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Order retrieved successfully', type: order_1.OrderDTO }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Order not found' }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -157,6 +174,10 @@ __decorate([
 ], OrderController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Update an order' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Order ID' }),
+    (0, swagger_1.ApiBody)({ type: order_1.OrderDTO, description: 'Updated order details' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Order updated successfully', type: order_1.OrderDTO }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -165,6 +186,9 @@ __decorate([
 ], OrderController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete an order' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Order ID' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Order deleted successfully', type: order_1.OrderDTO }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

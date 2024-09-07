@@ -41,12 +41,26 @@ let FeedbackController = class FeedbackController {
 exports.FeedbackController = FeedbackController;
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all feedbacks' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Successfully retrieved all feedbacks',
+        type: [feedback_1.FeedbackDTO],
+    }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], FeedbackController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get feedback by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'Feedback ID' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Successfully retrieved feedback',
+        type: feedback_1.FeedbackDTO,
+    }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Feedback not found' }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -54,6 +68,13 @@ __decorate([
 ], FeedbackController.prototype, "findFeedbackById", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Create new feedback' }),
+    (0, swagger_1.ApiBody)({ type: feedback_1.FeedbackDTO }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Feedback successfully created',
+        type: feedback_1.FeedbackDTO,
+    }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -61,6 +82,15 @@ __decorate([
 ], FeedbackController.prototype, "createFeedback", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Update feedback by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'Feedback ID' }),
+    (0, swagger_1.ApiBody)({ type: feedback_1.FeedbackDTO }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Feedback successfully updated',
+        type: feedback_1.FeedbackDTO,
+    }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Feedback not found' }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -69,6 +99,14 @@ __decorate([
 ], FeedbackController.prototype, "updateFeedback", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete feedback by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'Feedback ID' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Feedback successfully deleted',
+        type: feedback_1.FeedbackDTO,
+    }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Feedback not found' }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Res, NotFoundException, Query } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { lastValueFrom } from 'rxjs';
 import { Socket } from 'socket.io';
 import { OrderDTO } from 'src/dto/order';
@@ -31,6 +31,11 @@ export class OrderController {
   private client: ClientProxy;
 
   @Post()
+  @ApiOperation({ summary: 'Create a new checkout session' })
+  @ApiBody({ type: OrderDTO, description: 'Order details' })
+  @ApiQuery({ name: 'promoCode', required: false, description: 'Optional promo code for discount' })
+  @ApiResponse({ status: 201, description: 'Checkout session created successfully' })
+  @ApiResponse({ status: 404, description: 'Order or product details missing' })
   async createCheckoutSession(@Body() order: OrderDTO, @Query('promoCode') promoCode?: string): Promise<CheckoutUrl> {
     
     await this.orderService.create(order);
@@ -88,6 +93,10 @@ const lineItems = [];
   }
 
   @Get('success')
+  @ApiOperation({ summary: 'Handle successful payment' })
+  @ApiQuery({ name: 'session_id', description: 'Stripe session ID' })
+  @ApiResponse({ status: 302, description: 'Redirects to success page' })
+  @ApiResponse({ status: 404, description: 'Payment not completed' })
   async handleSuccess(@Query('session_id') sessionId: string, @Res() res): Promise<void | NotFoundException> {
     const session = await this.stripe.checkout.sessions.retrieve(sessionId);
     
@@ -106,25 +115,41 @@ const lineItems = [];
   }
 
   @Get('cancel')
+  @ApiOperation({ summary: 'Handle payment cancellation' })
+  @ApiResponse({ status: 302, description: 'Redirects to cancel page' })
   async handleCancel(@Res() res): Promise<void> {
     return res.redirect('http://localhost:3000/cancel-page'); 
   }
   @Get()
+  @ApiOperation({ summary: 'Retrieve all orders' })
+  @ApiResponse({ status: 200, description: 'Orders retrieved successfully', type: [OrderDTO] })
+ 
   async findAll(): Promise<Order[]> {
     return this.orderService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieve a specific order by ID' })
+  @ApiParam({ name: 'id', description: 'Order ID' })
+  @ApiResponse({ status: 200, description: 'Order retrieved successfully', type: OrderDTO })
+  @ApiResponse({ status: 404, description: 'Order not found' })
   async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<Order> {
     return this.orderService.findOne(id);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update an order' })
+  @ApiParam({ name: 'id', description: 'Order ID' })
+  @ApiBody({ type: OrderDTO, description: 'Updated order details' })
+  @ApiResponse({ status: 200, description: 'Order updated successfully', type: OrderDTO })
   async update(@Param('id', ValidateObjectIdPipe) id: string, @Body() updateOrderDto: OrderDTO): Promise<Order> {
     return this.orderService.update(id, updateOrderDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete an order' })
+  @ApiParam({ name: 'id', description: 'Order ID' })
+  @ApiResponse({ status: 200, description: 'Order deleted successfully', type: OrderDTO })
   async delete(@Param('id', ValidateObjectIdPipe) id: string): Promise<Order> {
     return this.orderService.delete(id);
   }

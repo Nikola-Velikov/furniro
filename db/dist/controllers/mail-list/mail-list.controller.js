@@ -44,6 +44,13 @@ let MailListController = class MailListController {
 exports.MailListController = MailListController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Add a new email to the mailing list' }),
+    (0, swagger_1.ApiBody)({ type: mailList_1.MailListDTO, description: 'Mailing list data' }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Email added successfully',
+        type: mailList_1.MailListDTO,
+    }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [mailList_1.MailListDTO]),
@@ -51,6 +58,9 @@ __decorate([
 ], MailListController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)('unsubscribe/:email'),
+    (0, swagger_1.ApiOperation)({ summary: 'Unsubscribe from the mailing list' }),
+    (0, swagger_1.ApiParam)({ name: 'email', description: 'The email address to unsubscribe' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Email unsubscribed successfully' }),
     __param(0, (0, common_1.Param)('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -58,12 +68,27 @@ __decorate([
 ], MailListController.prototype, "unsubscribe", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve all emails from the mailing list' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Mailing list retrieved successfully',
+        type: [mailList_1.MailListDTO],
+    }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], MailListController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Retrieve a single email from the mailing list by ID',
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID of the mailing list entry' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Mailing list entry retrieved successfully',
+        type: mailList_1.MailListDTO,
+    }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -71,6 +96,14 @@ __decorate([
 ], MailListController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Update an email in the mailing list' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID of the mailing list entry' }),
+    (0, swagger_1.ApiBody)({ type: mailList_1.MailListDTO, description: 'Updated mailing list data' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Mailing list entry updated successfully',
+        type: mailList_1.MailListDTO,
+    }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -79,6 +112,13 @@ __decorate([
 ], MailListController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete an email from the mailing list' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID of the mailing list entry' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Mailing list entry deleted successfully',
+        type: mailList_1.MailListDTO,
+    }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

@@ -49,6 +49,9 @@ let ReviewController = class ReviewController {
 };
 exports.ReviewController = ReviewController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new review for a product' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Review created successfully', type: review_1.ReviewDTO }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Product not found' }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -56,12 +59,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ReviewController.prototype, "createReview", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get all reviews' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all reviews', type: [review_1.ReviewDTO] }),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ReviewController.prototype, "findAllReviews", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get reviews by product ID' }),
+    (0, swagger_1.ApiParam)({ name: 'productId', description: 'ID of the product' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'List of reviews for the product', type: [review_1.ReviewDTO] }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Product not found' }),
     (0, common_1.Get)('product/:productId'),
     __param(0, (0, common_1.Param)('productId')),
     __metadata("design:type", Function),
@@ -69,6 +78,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ReviewController.prototype, "findReviewsByProduct", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get review by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID of the review' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'The review with the given ID', type: review_1.ReviewDTO }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Review not found' }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
@@ -76,6 +89,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ReviewController.prototype, "findReviewById", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Update review by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID of the review to update' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Review updated successfully', type: review_1.ReviewDTO }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Review not found' }),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __param(1, (0, common_1.Body)()),
@@ -84,6 +101,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ReviewController.prototype, "updateReview", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Delete review by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID of the review to delete' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Review deleted successfully', type: review_1.ReviewDTO }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Review not found' }),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),

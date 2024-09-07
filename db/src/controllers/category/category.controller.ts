@@ -18,7 +18,7 @@ import { CategoryService } from 'src/services/category/category.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from 'src/services/products/products.service';
 import { ValidateObjectIdPipe } from 'src/pipes/validate-object-id.pipe';
 
@@ -31,6 +31,9 @@ export class CategoryController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new category' })
+  @ApiBody({ type: CategoryDto, description: 'Category details' })
+  @ApiResponse({ status: 201, description: 'Category created successfully', type: CategoryDto })
   @UseInterceptors(
     FileInterceptor('cover_photo', {
       storage: diskStorage({
@@ -58,16 +61,28 @@ export class CategoryController {
     type: CategoryDto,
   })
   @Get()
+
+  @ApiOperation({ summary: 'Retrieve all categories' })
+  @ApiResponse({ status: 200, description: 'List of all categories', type: [CategoryDto] })
   async findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get category by ID' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiResponse({ status: 200, description: 'Category found', type: CategoryDto })
+  @ApiResponse({ status: 404, description: 'Category not found' })
   async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<Category> {
     return this.categoryService.findOne(id);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update a category by ID' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiBody({ type: CategoryDto, description: 'Updated category details' })
+  @ApiResponse({ status: 200, description: 'Category updated successfully', type: CategoryDto })
+  @ApiResponse({ status: 404, description: 'Category not found' })
   @UseInterceptors(
     FileInterceptor('cover_photo', {
       storage: diskStorage({
@@ -91,6 +106,11 @@ export class CategoryController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a category by ID' })
+  @ApiParam({ name: 'id', description: 'Category ID' })
+  @ApiQuery({ name: 'forceDelete', required: false, type: 'string', description: 'Set true to force delete the category and its products' })
+  @ApiResponse({ status: 200, description: 'Category deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Category not found' })
   async deleteCategory(
     @Param('id', ValidateObjectIdPipe) categoryId: string,
     @Query('forceDelete') forceDelete: string,

@@ -70,6 +70,9 @@ let CategoryController = class CategoryController {
 exports.CategoryController = CategoryController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new category' }),
+    (0, swagger_1.ApiBody)({ type: category_1.CategoryDto, description: 'Category details' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Category created successfully', type: category_1.CategoryDto }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('cover_photo', {
         storage: (0, multer_1.diskStorage)({
             destination: './uploads',
@@ -92,12 +95,18 @@ __decorate([
         type: category_1.CategoryDto,
     }),
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve all categories' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all categories', type: [category_1.CategoryDto] }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get category by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Category ID' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Category found', type: category_1.CategoryDto }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Category not found' }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -105,6 +114,11 @@ __decorate([
 ], CategoryController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Update a category by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Category ID' }),
+    (0, swagger_1.ApiBody)({ type: category_1.CategoryDto, description: 'Updated category details' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Category updated successfully', type: category_1.CategoryDto }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Category not found' }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('cover_photo', {
         storage: (0, multer_1.diskStorage)({
             destination: './uploads',
@@ -123,6 +137,11 @@ __decorate([
 ], CategoryController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete a category by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Category ID' }),
+    (0, swagger_1.ApiQuery)({ name: 'forceDelete', required: false, type: 'string', description: 'Set true to force delete the category and its products' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Category deleted successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Category not found' }),
     __param(0, (0, common_1.Param)('id', validate_object_id_pipe_1.ValidateObjectIdPipe)),
     __param(1, (0, common_1.Query)('forceDelete')),
     __metadata("design:type", Function),

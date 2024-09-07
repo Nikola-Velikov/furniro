@@ -3,7 +3,7 @@ import { ProductsService } from 'src/services/products/products.service';
 import { CategoryService } from 'src/services/category/category.service';
 import { Product } from 'src/interfaces/product.interface';
 import { ProductDTO } from 'src/dto/product';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import * as path from 'path';
 import * as multer from 'multer';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -19,11 +19,11 @@ export class ProductsController {
 
   
   
+  @ApiOperation({ summary: 'Retrieve all products' })
   @ApiResponse({
     status: 200,
     description: 'List of all products',
-    type: ProductDTO,
-    
+    type: [ProductDTO],
   })
   @Get()
   async findAll(
@@ -83,10 +83,25 @@ export class ProductsController {
     type: ProductDTO,
     
   })
+  @ApiOperation({ summary: 'Retrieve a product by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Details of a single product',
+    type: ProductDTO,
+  })
   @Get(':id')
   async findOne(@Param('id', ValidateObjectIdPipe) id: string): Promise<Product | null> {
     return this.productsService.findOne(id);
   }
+
+  
+  @ApiOperation({ summary: 'Create a new product' })
+  @ApiBody({ type: ProductDTO, description: 'Product details' })
+  @ApiResponse({
+    status: 201,
+    description: 'Product created successfully',
+    type: ProductDTO,
+  })
 
   @Post()
   @UseInterceptors(FileFieldsInterceptor([
@@ -115,11 +130,12 @@ export class ProductsController {
 
 
   
+  @ApiOperation({ summary: 'Update a product by ID' })
+  @ApiBody({ type: ProductDTO, description: 'Updated product details' })
   @ApiResponse({
     status: 200,
-    description: 'Updates one of the products',
+    description: 'Product updated successfully',
     type: ProductDTO,
-    
   })
   @Put(':id')
   @UseInterceptors(FileFieldsInterceptor([
@@ -149,7 +165,12 @@ export class ProductsController {
 
     return this.productsService.update(id, productDto);
   }
-
+  @ApiOperation({ summary: 'Delete a product by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product deleted successfully',
+    type: ProductDTO,
+  })
   @Delete(':id')
   async remove(@Param('id', ValidateObjectIdPipe) id: string): Promise<Product | null> {
     return this.productsService.remove(id);

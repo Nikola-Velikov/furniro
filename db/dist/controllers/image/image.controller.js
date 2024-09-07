@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImageController = void 0;
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 const image_service_1 = require("../../services/image/image.service");
 let ImageController = class ImageController {
     constructor(imagesService) {
@@ -32,6 +33,11 @@ let ImageController = class ImageController {
 exports.ImageController = ImageController;
 __decorate([
     (0, common_1.Get)('generateImages'),
+    (0, swagger_1.ApiOperation)({ summary: 'Fetch images from Unsplash based on a keyword and limit' }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', type: Number, required: false, description: 'The maximum number of images to retrieve' }),
+    (0, swagger_1.ApiQuery)({ name: 'keyword', type: String, required: true, description: 'The keyword to search for images' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Images fetched successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Keyword is required' }),
     __param(0, (0, common_1.Query)('limit')),
     __param(1, (0, common_1.Query)('keyword')),
     __metadata("design:type", Function),
@@ -39,6 +45,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ImageController.prototype, "generateImages", null);
 exports.ImageController = ImageController = __decorate([
+    (0, swagger_1.ApiTags)('Images'),
     (0, common_1.Controller)('images'),
     __metadata("design:paramtypes", [image_service_1.ImageService])
 ], ImageController);
